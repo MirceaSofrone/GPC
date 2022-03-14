@@ -30,3 +30,17 @@
 *.exe
 *.out
 *.app
+*.log
+*.sln
+*.json
+*.suo
+*.db*
+*.tlog
+*.pdb
+*.idb
+*glut.h
+*.vcxproj*
+*.ipch
+*.opendb
+*.ilk
+*.recipe
