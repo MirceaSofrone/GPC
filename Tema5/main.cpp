@@ -106,6 +106,65 @@ void Display2() {
     glPopMatrix();
 }
 
+int inMn(complex& x, int iter_no, int abs_max)
+{
+    complex z0, z1;
+
+    z0 = { 0, 0 };
+    for (int i = 1; i < iter_no; i++)
+    {
+        z1.real = multiply(z0, z0).real + x.real;
+        z1.img = multiply(z0, z0).img + x.img;
+
+        if (z1.real == z0.real && z1.img == z0.img)
+        {
+            return 0;
+        }
+        else if (complex_absolute(z1) > abs_max) {
+            return i;
+        }
+        z0 = z1;
+    }
+
+    return 0;
+}
+
+//Mandelbrot
+void Display3() {
+    double ratio = 0.005; //sau 0.005
+    int iteration_number = 10;
+    int max_abs = 2;
+    double xmin = -2;
+    double xmax = 2;
+    double ymin = -2;
+    double ymax = 2;
+
+    glColor3f(1.0, 0.1, 0.1);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glTranslated((xmin + xmax) * fmax(fabs(xmax), fabs(xmin)) / (xmin - xmax),
+        (ymin + ymax) * fmax(fabs(ymax), fabs(ymin)) / (ymin - ymax), 0);
+    glScaled(fmax(fabs(xmax), fabs(xmin)) / (xmax - xmin),
+        fmax(fabs(ymax), fabs(ymin)) / (ymax - ymin), 1);
+    glBegin(GL_POINTS);
+    for (double x = xmin; x <= xmax; x += ratio)
+        for (double y = ymin; y <= ymax; y += ratio) {
+            complex z = { x, y };
+            int res = inMn(z, iteration_number, max_abs);
+            if (res == 0) {
+                glColor3f(1.0, 0.1, 0.1),
+                glVertex3d(x, y, 0);
+            }
+            else {
+                glColor3f(0, 1.0 / res, 0);
+                glVertex3d(x, y, 0);
+            }
+        }
+    glEnd();
+    glPopMatrix();
+}
+
 void Init(void) {
 
     glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -124,6 +183,10 @@ void Display(void) {
     case '2':
         glClear(GL_COLOR_BUFFER_BIT);
         Display2();
+        break;
+    case '3':
+        glClear(GL_COLOR_BUFFER_BIT);
+        Display3();
         break;
     default:
         break;
